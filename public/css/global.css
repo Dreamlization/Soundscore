@@ -1,0 +1,127 @@
+
+        /* 引入本地 Noto Music 字体以解决 iOS 等设备音乐符号渲染失败（显示为豆腐块）的问题 */
+@font-face {
+    font-family: 'Noto Music';
+    src: url('../lib/webfonts/NotoMusic-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ==========================================================================
+   全局通用样式
+   ========================================================================== */
+body {
+    background-color: #121212;
+    color: #ffffff;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    overflow-x: hidden;
+}
+
+.text-glow {
+    text-shadow: 0 0 10px rgba(255, 42, 109, 0.6), 0 0 20px rgba(255, 42, 109, 0.4);
+}
+
+.bg-dot-pattern {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+.pink-breathing {
+    animation: breathe 3s infinite ease-in-out;
+}
+
+@keyframes breathe {
+    0% { box-shadow: 0 0 10px rgba(255, 42, 109, 0.3); }
+    50% { box-shadow: 0 0 25px rgba(255, 42, 109, 0.7); }
+    100% { box-shadow: 0 0 10px rgba(255, 42, 109, 0.3); }
+}
+
+/* ==========================================================================
+   自定义组件样式 (从 JS 提取)
+   ========================================================================== */
+
+/* --- 首页 3D 效果 --- */
+.home-3d-container {
+    transform-style: preserve-3d;
+    transform: rotateY(25deg) rotateX(15deg) rotateZ(-3deg) scale(1.05);
+}
+.home-3d-screen {
+    transform-origin: bottom center;
+    transform: rotateX(-5deg);
+}
+.home-3d-base {
+    transform-origin: top center;
+    transform: rotateX(65deg) translateY(-2px);
+}
+
+/* --- 首页漂浮元素动画时长 --- */
+.anim-duration-3s { animation-duration: 3s; }
+.anim-duration-4s { animation-duration: 4s; }
+.anim-duration-5s { animation-duration: 5s; }
+.anim-duration-3-5s { animation-duration: 3.5s; }
+
+/* --- 首页漂浮图片 3D 效果 --- */
+.home-float-img-1 {
+    transform: rotateZ(-3deg) rotateY(10deg);
+    transform-style: preserve-3d;
+}
+.home-float-img-2 {
+    transform: translateY(20px) rotateZ(1deg);
+    transform-style: preserve-3d;
+}
+.home-float-img-3 {
+    transform: rotateZ(3deg) rotateY(-10deg);
+    transform-style: preserve-3d;
+}
+
+/* --- 工作台样式 --- */
+.workspace-clef {
+    transform: translateY(-5px);
+}
+.workspace-signature {
+    transform: translate(10px, -15px);
+}
+.workspace-remark-bg {
+    clip-path: polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%);
+}
+
+/* --- 个人中心样式 --- */
+.profile-pro-gradient {
+    background: linear-gradient(90deg, #FF2A6D, #FF4B82);
+}
+
+/* --- 导航栏样式 --- */
+.header-logo-offset {
+    transform: translateX(-2vw);
+}
+
+/* ==========================================================================
+   滚动条与表单控件
+   ========================================================================== */
+/* 隐藏滚动条但保留功能 */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #121212;
+}
+::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #FF2A6D;
+}
+
+/* 隐藏原生密码显示按钮，使用自定义组件 */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+input[type="text"]::-ms-reveal,
+input[type="text"]::-ms-clear {
+    display: none;
+}
+    

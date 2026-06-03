@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>声谱工坊 - AI音频扒谱与音色分离</title>
+    
+    <!-- 网页图标 -->
+    <link rel="icon" type="image/png" href="public/images/ui/webicon.png">
+    <link rel="apple-touch-icon" href="public/images/ui/webicon.png">
+
+    <!-- Vue 3 -->
+    <script src="public/lib/js/vue.global.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="public/lib/js/tailwindcss.js"></script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="public/lib/css/all.min.css">
+    
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                        music: ['"Bravura"', '"Noto Music"', '"Apple Symbols"', '"Segoe UI Symbol"', '"Symbola"', 'serif', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            DEFAULT: '#FF2A6D',
+                            hover: '#FF4B82',
+                            light: 'rgba(255,42,109,0.1)'
+                        },
+                        dark: {
+                            DEFAULT: '#121212',
+                            card: '#1A1A1A',
+                            border: '#2A2A2A'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="public/css/global.css">
+</head>
+<body class="min-h-screen flex flex-col">
+    <div id="app" class="flex flex-col min-h-screen w-full relative">
+        
+        <!-- 全局导航栏 (工作台不显示此导航) -->
+        <app-header v-if="currentPage !== 'workspace'" :current-page="currentPage" @navigate="currentPage = $event"></app-header>
+        
+        <!-- 页面内容路由占位 -->
+        <main class="flex-grow flex flex-col relative w-full">
+            <component 
+                :is="'page-' + currentPage" 
+                @navigate="currentPage = $event"
+                @require-login="handleRequireLogin">
+            </component>
+        </main>
+        
+        <!-- 全局弹窗组件 -->
+        <login-modal 
+            v-if="store.showLoginModal" 
+            @close="store.showLoginModal = false"
+            @login-success="handleLoginSuccess">
+        </login-modal>
+        
+        <upgrade-modal 
+            v-if="store.showUpgradeModal" 
+            @close="store.showUpgradeModal = false">
+        </upgrade-modal>
+
+        <agreement-modal 
+            v-if="store.showAgreementModal" 
+            :type="store.agreementType" 
+            @close="store.showAgreementModal = false">
+        </agreement-modal>
+
+        <div v-if="showEntryTip" class="fixed inset-0 bg-black/80 flex items-center justify-center z-[200] backdrop-blur-sm p-4" @click.self="closeEntryTip">
+            <div class="w-full max-w-xl rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-b from-[#1d1d1d] to-[#0f0f0f]">
+                <div class="relative p-7 text-center">
+                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,42,109,0.22),transparent_55%)]"></div>
+                    <button @click="closeEntryTip" class="absolute right-4 top-4 w-9 h-9 rounded-full bg-white/5 border border-white/10 text-gray-300 hover:text-white hover:bg-white/10 transition flex items-center justify-center">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                    <h2 class="relative text-2xl font-extrabold text-brand text-center">温馨提示</h2>
+                    <div class="relative mt-3 mx-auto h-px w-24 bg-gradient-to-r from-transparent via-brand/70 to-transparent"></div>
+                </div>
+                <div class="px-8 pb-7 text-gray-200 text-base leading-relaxed text-center">
+                    为感受项目全部功能及获得最佳使用体验，推荐使用PC浏览器并选择“新窗口打开”体验本项目，在本课程展示网站进行体验时推荐调整页面缩放比例为80%，如有意见建议请及时与我们联系，希望我们的网站能让您得到良好的体验！
+                </div>
+                <div class="px-8 pb-8 flex justify-center">
+                    <button @click="closeEntryTip" class="px-10 py-3.5 rounded-full bg-brand text-white font-bold hover:bg-[#FF4B82] transition shadow-[0_0_25px_rgba(255,42,109,0.45)]">
+                        我知道了
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 简单页脚 (工作台不显示) -->
+        <footer v-if="currentPage !== 'workspace'" class="border-t border-dark-border py-8 mt-10 text-center text-sm text-gray-500">
+            <p>© 2026 声谱工坊 SoundScore AI. All rights reserved. <span class="text-gray-600 ml-2 font-mono text-xs">Version 4.2</span></p>
+            <div class="mt-2 space-x-4">
+                <a href="#" @click.prevent="showAgreement('service')" class="hover:text-brand transition">用户服务协议</a>
+                <a href="#" @click.prevent="showAgreement('privacy')" class="hover:text-brand transition">隐私政策</a>
+                <a href="#" class="hover:text-brand transition">陕ICP备2026xxxx号-1</a>
+            </div>
+            <p class="mt-4 text-xs text-gray-600 max-w-2xl mx-auto px-4">免责声明：本网站仅作技术演示与学习用途。用户上传的音频如涉及版权纠纷，本平台不承担任何责任。系统会在处理完毕后自动删除临时文件。</p>
+        </footer>
+    </div>
+
+    <!-- Store & State -->
+    <script src="src/store.js"></script>
+    
+    <!-- Components -->
+    <script src="src/components/header.js"></script>
+    <script src="src/components/login-modal.js"></script>
+    <script src="src/components/upgrade-modal.js"></script>
+    <script src="src/components/agreement-modal.js"></script>
+    
+    <!-- Pages -->
+    <script src="src/pages/home.js"></script>
+    <script src="src/pages/workspace.js"></script>
+    <script src="src/pages/projects.js"></script>
+    <script src="src/pages/profile.js"></script>
+    <script src="src/pages/about.js"></script>
+    
+    <!-- Main App Entry -->
+    <script src="src/app.js"></script>
+</body>
+</html>
