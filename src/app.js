@@ -2,22 +2,13 @@ const app = Vue.createApp({
     data() {
         return {
             currentPage: 'home',
-            store,
-            showEntryTip: false
+            store
         };
     },
     created() {
         // 执行 store 的初始化检查，修复可能损坏的缓存数据
         if (typeof this.store.init === 'function') {
             this.store.init();
-        }
-        try {
-            if (!sessionStorage.getItem('soundscore_entry_tip_shown')) {
-                sessionStorage.setItem('soundscore_entry_tip_shown', '1');
-                this.showEntryTip = true;
-            }
-        } catch (e) {
-            this.showEntryTip = true;
         }
     },
     methods: {
@@ -33,9 +24,6 @@ const app = Vue.createApp({
         showAgreement(type) {
             store.agreementType = type;
             store.showAgreementModal = true;
-        },
-        closeEntryTip() {
-            this.showEntryTip = false;
         }
     },
     mounted() {

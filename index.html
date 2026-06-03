@@ -77,27 +77,6 @@
             :type="store.agreementType" 
             @close="store.showAgreementModal = false">
         </agreement-modal>
-
-        <div v-if="showEntryTip" class="fixed inset-0 bg-black/80 flex items-center justify-center z-[200] backdrop-blur-sm p-4" @click.self="closeEntryTip">
-            <div class="w-full max-w-xl rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-b from-[#1d1d1d] to-[#0f0f0f]">
-                <div class="relative p-7 text-center">
-                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,42,109,0.22),transparent_55%)]"></div>
-                    <button @click="closeEntryTip" class="absolute right-4 top-4 w-9 h-9 rounded-full bg-white/5 border border-white/10 text-gray-300 hover:text-white hover:bg-white/10 transition flex items-center justify-center">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                    <h2 class="relative text-2xl font-extrabold text-brand text-center">温馨提示</h2>
-                    <div class="relative mt-3 mx-auto h-px w-24 bg-gradient-to-r from-transparent via-brand/70 to-transparent"></div>
-                </div>
-                <div class="px-8 pb-7 text-gray-200 text-base leading-relaxed text-center">
-                    为感受项目全部功能及获得最佳使用体验，推荐使用PC浏览器并选择“新窗口打开”体验本项目，在本课程展示网站进行体验时推荐调整页面缩放比例为80%，如有意见建议请及时与我们联系，希望我们的网站能让您得到良好的体验！
-                </div>
-                <div class="px-8 pb-8 flex justify-center">
-                    <button @click="closeEntryTip" class="px-10 py-3.5 rounded-full bg-brand text-white font-bold hover:bg-[#FF4B82] transition shadow-[0_0_25px_rgba(255,42,109,0.45)]">
-                        我知道了
-                    </button>
-                </div>
-            </div>
-        </div>
         
         <!-- 简单页脚 (工作台不显示) -->
         <footer v-if="currentPage !== 'workspace'" class="border-t border-dark-border py-8 mt-10 text-center text-sm text-gray-500">
